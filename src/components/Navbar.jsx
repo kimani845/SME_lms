@@ -13,60 +13,58 @@ const Navbar = () => {
     navigate('/login');
   };
 
+  const navItems = user ? [
+    { name: 'Dashboard', path: '/dashboard', icon: Home },
+    { name: 'Courses', path: '/courses', icon: BookOpen },
+    { name: 'AI Mentor', path: '/mentor', icon: MessageCircle },
+    { name: 'Investor Score', path: '/investor-score', icon: Award },
+  ] : [];
+
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">S</span>
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                <span className="text-white font-extrabold text-xl">S</span>
               </div>
-              <span className="text-xl font-bold text-gray-800">SME Platform</span>
+              <span className="text-2xl font-extrabold text-gray-900">Mwamko Ventures</span>
             </Link>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-1">
             {user ? (
               <>
-                <Link to="/dashboard" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-100">
-                  <Home size={18} />
-                  <span>Dashboard</span>
-                </Link>
-                <Link to="/courses" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-100">
-                  <BookOpen size={18} />
-                  <span>Courses</span>
-                </Link>
-                <Link to="/mentor" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-100">
-                  <MessageCircle size={18} />
-                  <span>AI Mentor</span>
-                </Link>
-                <Link to="/investor-score" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-100">
-                  <Award size={18} />
-                  <span>Score</span>
-                </Link>
+                {navItems.map((item) => (
+                  <NavLink key={item.name} to={item.path} icon={item.icon}>
+                    {item.name}
+                  </NavLink>
+                ))}
                 
-                <div className="flex items-center space-x-2 pl-4 border-l">
-                  <Link to="/profile" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100">
-                    <User size={18} />
-                    <span>{user.full_name}</span>
+                <div className="relative group ml-4">
+                  <Link to="/profile" className="flex items-center space-x-2 px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition duration-200">
+                    <User size={18} className="text-gray-700" />
+                    <span className="font-medium text-gray-800">{user.full_name || 'Profile'}</span>
                   </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center space-x-1 px-3 py-2 rounded-md text-red-600 hover:bg-red-50"
-                  >
-                    <LogOut size={18} />
-                    <span>Logout</span>
-                  </button>
+                  {/* Dropdown for profile options could go here */}
                 </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-1 px-4 py-2 rounded-full text-red-600 border border-red-600 hover:bg-red-50 transition duration-200 ml-2"
+                >
+                  <LogOut size={18} />
+                  <span className="font-medium">Logout</span>
+                </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="px-4 py-2 text-gray-700 hover:text-primary-600">
+                <Link to="/login" className="px-5 py-2 text-gray-700 font-medium hover:text-blue-700 transition duration-200">
                   Login
                 </Link>
-                <Link to="/register" className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700">
+                <Link to="/register" className="px-5 py-2 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 shadow-md transition duration-200">
                   Get Started
                 </Link>
               </>
@@ -77,7 +75,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-md hover:bg-gray-100"
+              className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
             >
               <Menu size={24} />
             </button>
@@ -87,40 +85,27 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {user ? (
               <>
-                <Link to="/dashboard" className="block px-3 py-2 rounded-md hover:bg-gray-100">
-                  Dashboard
-                </Link>
-                <Link to="/courses" className="block px-3 py-2 rounded-md hover:bg-gray-100">
-                  Courses
-                </Link>
-                <Link to="/mentor" className="block px-3 py-2 rounded-md hover:bg-gray-100">
-                  AI Mentor
-                </Link>
-                <Link to="/investor-score" className="block px-3 py-2 rounded-md hover:bg-gray-100">
-                  Investor Score
-                </Link>
-                <Link to="/profile" className="block px-3 py-2 rounded-md hover:bg-gray-100">
-                  Profile
-                </Link>
+                {navItems.map((item) => (
+                  <MobileNavLink key={item.name} to={item.path}>
+                    {item.name}
+                  </MobileNavLink>
+                ))}
+                <MobileNavLink to="/profile">Profile</MobileNavLink>
                 <button
                   onClick={handleLogout}
-                  className="block w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50"
+                  className="block w-full text-left px-3 py-2 rounded-md text-red-600 font-medium hover:bg-red-50"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="block px-3 py-2 rounded-md hover:bg-gray-100">
-                  Login
-                </Link>
-                <Link to="/register" className="block px-3 py-2 rounded-md hover:bg-gray-100">
-                  Register
-                </Link>
+                <MobileNavLink to="/login">Login</MobileNavLink>
+                <MobileNavLink to="/register">Get Started</MobileNavLink>
               </>
             )}
           </div>
@@ -129,5 +114,25 @@ const Navbar = () => {
     </nav>
   );
 };
+
+// Helper components for cleaner JSX
+const NavLink = ({ to, icon: Icon, children }) => (
+  <Link 
+    to={to} 
+    className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-700 font-medium hover:bg-gray-100 hover:text-blue-700 transition duration-200"
+  >
+    {Icon && <Icon size={18} className="text-gray-600" />}
+    <span>{children}</span>
+  </Link>
+);
+
+const MobileNavLink = ({ to, children }) => (
+  <Link 
+    to={to} 
+    className="block px-3 py-2 rounded-md text-gray-800 font-medium hover:bg-gray-100 hover:text-blue-700 transition duration-200"
+  >
+    {children}
+  </Link>
+);
 
 export default Navbar;
