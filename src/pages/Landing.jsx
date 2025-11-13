@@ -19,14 +19,14 @@ const Landing = () => {
           </svg>
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center justify-center text-center z-10">
-          <span className="inline-block bg-white bg-opacity-20 text-white text-sm font-semibold px-4 py-1 rounded-full mb-4 animate-fade-in-up">
-            New! AI-Powered Insights
+  <span className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold px-5 py-2 rounded-full mb-6 shadow-lg transform transition duration-500 hover:scale-105 animate-fade-in-up">
+            New! AI-Powered Business Insights
           </span>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight animate-fade-in-up delay-100">
             Empower Your Business <br className="hidden md:inline" /> with Intelligent Guidance
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-4xl mx-auto animate-fade-in-up delay-200">
-            Join thousands of ambitious Kenyan entrepreneurs transforming their ventures through{' '}
+            Join thousands of ambitious Kenyan Small Venture Entrepreneurs transforming their ventures through{' '}
             <span className="font-semibold text-white">cutting-edge education, mentorship,</span> and{' '}
             <span className="font-semibold text-white">AI-powered strategies</span>.
           </p>
@@ -277,8 +277,8 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} SME Platform. All rights reserved.</p>
-            <p className="mt-2">Crafted with ❤️ for Kenyan Entrepreneurs.</p>
+            <p>&copy; {new Date().getFullYear()} Mwamko. All rights reserved.</p>
+            <p className="mt-2">Developed with ❤️ for Kenyan Entrepreneurs.</p>
           </div>
         </div>
       </footer>

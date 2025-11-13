@@ -1,274 +1,268 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { coursesAPI, aiMentorAPI } from '../services/api';
-import { BookOpen, Award, TrendingUp, MessageCircle, Clock, CheckCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { Mail, Lock, User, Phone, Briefcase, MapPin, Building } from 'lucide-react';
 
-const Dashboard = () => {
-  const { user } = useAuth();
-  const [myCourses, setMyCourses] = useState([]);
-  const [recommended, setRecommended] = useState([]);
-  const [investorScore, setInvestorScore] = useState(null);
-  const [loading, setLoading] = useState(true);
+const Register = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    full_name: '',
+    phone_number: '',
+    business_name: '',
+    business_stage: 'idea',
+    sector: '',
+    county: '',
+    language_preference: 'en',
+  });
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  const businessStages = [
+    { value: 'idea', label: 'Just an Idea' },
+    { value: 'startup', label: 'Early Startup' },
+    { value: 'growth', label: 'Growing Business' },
+    { value: 'expansion', label: 'Ready to Expand' },
+  ];
 
-  const fetchDashboardData = async () => {
-    try {
-      const [coursesRes, recommendedRes] = await Promise.all([
-        coursesAPI.getMyCourses(),
-        coursesAPI.getRecommendedCourses(),
-      ]);
+  const kenyanCounties = [
+    'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika', 'Malindi',
+    'Kitale', 'Garissa', 'Kakamega', 'Nyeri', 'Machakos', 'Meru', 'Kilifi',
+  ];
 
-      setMyCourses(coursesRes.data);
-      setRecommended(recommendedRes.data);
+  const sectors = [
+    'Agriculture', 'Technology', 'Retail', 'Manufacturing', 'Services',
+    'Tourism', 'Education', 'Healthcare', 'Transport', 'Food & Beverage',
+    'Construction', 'Fashion', 'Other',
+  ];
 
-      // Try to get investor score
-      try {
-        const scoreRes = await aiMentorAPI.getInvestorScore();
-        setInvestorScore(scoreRes.data);
-      } catch (error) {
-        // Score might not exist yet
-      }
-    } catch (error) {
-      toast.error('Failed to load dashboard data');
-    } finally {
-      setLoading(false);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const success = await register(formData);
+    
+    if (success) {
+      navigate('/dashboard');
     }
+    
+    setLoading(false);
   };
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 18) return 'Good Afternoon';
-    return 'Good Evening';
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-primary-600 to-secondary-600 rounded-2xl p-8 text-white mb-8">
-          <h1 className="text-3xl font-bold mb-2">
-            {getGreeting()}, {user?.full_name}! 👋
-          </h1>
-          <p className="text-primary-100">
-            {user?.business_name ? `Managing ${user.business_name}` : 'Ready to build your business?'}
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-12 px-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Start Your Journey</h1>
+          <p className="text-gray-600">Join thousands of Kenyan entrepreneurs transforming their businesses</p>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-primary-100 rounded-lg">
-                <BookOpen className="text-primary-600" size={24} />
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Personal Information */}
+            <div className="border-b pb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Personal Information</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      name="full_name"
+                      value={formData.full_name}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number *
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <input
+                      type="tel"
+                      name="phone_number"
+                      value={formData.phone_number}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="+254700000000"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Password *
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                      minLength={6}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-gray-800">{myCourses.length}</h3>
-            <p className="text-gray-600">Enrolled Courses</p>
-          </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <CheckCircle className="text-green-600" size={24} />
-              </div>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800">
-              {myCourses.filter(c => c.is_completed).length}
-            </h3>
-            <p className="text-gray-600">Completed</p>
-          </div>
+            {/* Business Information */}
+            <div className="border-b pb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Business Information</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Name
+                  </label>
+                  <div className="relative">
+                    <Briefcase className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      name="business_name"
+                      value={formData.business_name}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="My Business"
+                    />
+                  </div>
+                </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-yellow-100 rounded-lg">
-                <Award className="text-yellow-600" size={24} />
-              </div>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800">{user?.gamification_points || 0}</h3>
-            <p className="text-gray-600">Points Earned</p>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <TrendingUp className="text-blue-600" size={24} />
-              </div>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800">
-              {investorScore ? `${investorScore.overall_score.toFixed(0)}%` : 'N/A'}
-            </h3>
-            <p className="text-gray-600">Investor Score</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* My Courses */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">My Courses</h2>
-                <Link to="/courses" className="text-primary-600 hover:text-primary-700 font-semibold">
-                  Browse All →
-                </Link>
-              </div>
-
-              {myCourses.length === 0 ? (
-                <div className="text-center py-12">
-                  <BookOpen size={48} className="mx-auto text-gray-400 mb-4" />
-                  <p className="text-gray-600 mb-4">You haven't enrolled in any courses yet</p>
-                  <Link
-                    to="/courses"
-                    className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Stage *
+                  </label>
+                  <select
+                    name="business_stage"
+                    value={formData.business_stage}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   >
-                    Explore Courses
-                  </Link>
+                    {businessStages.map((stage) => (
+                      <option key={stage.value} value={stage.value}>
+                        {stage.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {myCourses.map((progress) => (
-                    <Link
-                      key={progress.id}
-                      to={`/courses/${progress.course_id}`}
-                      className="block border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Sector
+                  </label>
+                  <div className="relative">
+                    <Building className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <select
+                      name="sector"
+                      value={formData.sector}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-gray-800">{progress.course.title}</h3>
-                        <span className={`px-3 py-1 rounded-full text-sm ${
-                          progress.is_completed
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {progress.is_completed ? 'Completed' : 'In Progress'}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-3">{progress.course.description}</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 bg-gray-200 rounded-full h-2 mr-4">
-                          <div
-                            className="bg-primary-600 h-2 rounded-full"
-                            style={{ width: `${progress.completion_percentage}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm font-semibold text-gray-700">
-                          {progress.completion_percentage}%
-                        </span>
-                      </div>
-                    </Link>
-                  ))}
+                      <option value="">Select sector</option>
+                      {sectors.map((sector) => (
+                        <option key={sector} value={sector}>
+                          {sector}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              )}
-            </div>
 
-            {/* Recommended Courses */}
-            {recommended.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                  Recommended for You 🎯
-                </h2>
-                <div className="space-y-4">
-                  {recommended.slice(0, 3).map((course) => (
-                    <Link
-                      key={course.id}
-                      to={`/courses/${course.id}`}
-                      className="block border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    County
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-3 text-gray-400" size={20} />
+                    <select
+                      name="county"
+                      value={formData.county}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
-                      <h3 className="font-semibold text-gray-800 mb-2">{course.title}</h3>
-                      <p className="text-sm text-gray-600 mb-3">{course.description}</p>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Clock size={16} className="mr-1" />
-                        <span>{course.estimated_duration} minutes</span>
-                        <span className="mx-2">•</span>
-                        <span className="capitalize">{course.difficulty_level}</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Quick Actions */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-              <div className="space-y-3">
-                <Link
-                  to="/mentor"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <MessageCircle className="text-purple-600" size={20} />
+                      <option value="">Select county</option>
+                      {kenyanCounties.map((county) => (
+                        <option key={county} value={county}>
+                          {county}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-800">Ask AI Mentor</p>
-                    <p className="text-sm text-gray-600">Get instant guidance</p>
-                  </div>
-                </Link>
-
-                <Link
-                  to="/investor-score"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <TrendingUp className="text-blue-600" size={20} />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800">Check Your Score</p>
-                    <p className="text-sm text-gray-600">See investor readiness</p>
-                  </div>
-                </Link>
-
-                <Link
-                  to="/courses"
-                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <BookOpen className="text-green-600" size={20} />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800">Browse Courses</p>
-                    <p className="text-sm text-gray-600">Explore new topics</p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-
-            {/* Access Channels */}
-            <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl p-6 text-white">
-              <h2 className="text-xl font-bold mb-4">Learn Anywhere</h2>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <p>💻 Web Platform</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <p>📱 WhatsApp: {user?.phone_number}</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <p>📞 USSD: *384*123#</p>
                 </div>
               </div>
             </div>
+
+            {/* Language Preference */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Preferred Language
+              </label>
+              <select
+                name="language_preference"
+                value={formData.language_preference}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              >
+                <option value="en">English</option>
+                <option value="sw">Swahili</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-gray-600">
+              Already have an account?{' '}
+              <Link to="/login" className="text-primary-600 font-semibold hover:text-primary-700">
+                Sign in here
+              </Link>
+            </p>
           </div>
         </div>
       </div>
@@ -276,4 +270,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Register;
