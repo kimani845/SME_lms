@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
       toast.success('Registration successful!');
       return true;
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Registration failed');
+      toast.error(error.response?.data?.detail || 'Your Registration failed');
       return false;
     }
   };
