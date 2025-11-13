@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 postcss.config.js
 tailwind.config.js
+run_dev.sh
