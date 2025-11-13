@@ -10,7 +10,7 @@ import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import AIMentor from './pages/AIMentor';
 import InvestorScore from './pages/InvestorScore';
-// import Profile from './pages/Profile';
+import Profile from './pages/Profile';
 import Landing from './pages/Landing';
 
 const PrivateRoute = ({ children }) => {
